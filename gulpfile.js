@@ -4,9 +4,7 @@ const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 const concat = require('gulp-concat');
 const autoprefixer = require('gulp-autoprefixer');
-const sourcemaps = require('gulp-sourcemaps');
 const cleanCss = require('gulp-clean-css');
-
 
 const paths = {
     styles: {
@@ -20,33 +18,24 @@ const paths = {
     plugins: {
         src: './src/js/plugins/*.js',
         dest: './f/js/'
-    },
-    images: {
-        src: './src/i/images/**/*',
-        dest: './f/i/'
     }
 }
 
 //Сборка, добавление префиксов и минификация main.css из папки src/sass/images/. Сохраняет в папку /f/css/.
 function maincss(){
     return gulp.src('./src/sass/main.scss')
-        .pipe(sourcemaps.init())
         .pipe(sass())
         .pipe(autoprefixer({
             cascade: false
         }))
         .pipe(cleanCss())
         .pipe(concat('main.min.css'))
-        .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./f/css/'))
 }
 
 //Сборка и минификация скриптов из папки src/js/main/. Сохраняет в папку /f/js/.
 function scripts(){
-    return gulp.src(paths.scripts.src,{
-        sourcemap: true
-    })
-        .pipe(sourcemaps.init())
+    return gulp.src(paths.scripts.src)
         .pipe(babel({
             presets:['@babel/env']
         }))
@@ -58,10 +47,7 @@ function scripts(){
 
 //Сборка и минификация плагин-скриптов из папки src/js/plugins/. Сохраняет в папку /f/js/.
 function plugins(){
-    return gulp.src(paths.plugins.src,{
-        sourcemap: true
-    })
-        .pipe(sourcemaps.init())
+    return gulp.src(paths.plugins.src)
         .pipe(babel({
             presets:['@babel/env']
         }))
@@ -70,8 +56,6 @@ function plugins(){
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(paths.plugins.dest))
 }
-
-
 
 //Слежение за изменениями в файлах
 function watch(){
